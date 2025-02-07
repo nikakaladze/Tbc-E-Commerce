@@ -3,7 +3,8 @@ const AnnouncementBar = () => {
     return(
 
         <div className='w-full bg-black py-2'>
-            <div className='container'>
+            <div className='container mx-auto
+            '>
                 <span></span>
             </div>
         </div>
