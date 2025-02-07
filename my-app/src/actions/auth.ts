@@ -1,12 +1,13 @@
-import  prisma  from "../lib/prisma";
+import prisma from '../lib/prisma';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { cookies } from "next/headers";
 import { cache } from "react";
-
 import type { User, Session } from "@prisma/client";
 
-export function generateSessionToken(): string {
+import { isSafeInteger } from 'lodash';
+
+export async function   generateSessionToken():Promise <string> {
     const bytes = new Uint8Array(20);
     crypto.getRandomValues(bytes);
     const token = encodeBase32LowerCaseNoPadding(bytes);
@@ -132,17 +133,57 @@ try {
 
         },
 
-       
     })
+    const safeUser = {
+        ...user,
+        passwordHash:undefined,
+
+    }
     return {
-        email,
+        user,safeUser,
+
         error: null,
 
     }
 } catch (e) {
     return{
         user:null,
-        error:"failed to register User"
+        error:"Failed to Register User"
     }
+}
+}
+
+export const loginUser =  async(email:string, password:string) => {
+    const user = await prisma.user.findUnique({
+        where:{
+            email:email,
+
+        }
+    });
+    if(!user){
+        return{
+            user:null,
+            error:"User Not Found"
+        }
+    }
+const passwordValid = await verifyPassword(password,user.passwordHash)
+if(!passwordValid){
+    return{
+        user:null,
+        error:"invalid passord"
+    }
+}
+const token  = await generateSessionToken();
+const session = await createSession(token,user.id)
+const safeUser = {
+    ...user,
+    passwordHash:undefined,
+
+};
+
+return{
+user:safeUser,
+error:null,
+
 }
 }
