@@ -1,6 +1,7 @@
 "use client";
 import React, { useActionState } from "react";
 import Form from "next/form";
+import {Loader2} from 'lucide-react'
 
 const initialState = {
   message: "",
@@ -66,7 +67,8 @@ const SignUp = ({ action }: SignUpProps) => {
         <button type="submit" disabled={isPending} className={`w-full  bg-rose-600 text-white py-3 rounded-md hover bg-rose-700 flex items-center justify-center gap-2 ${isPending ? 'cursor-not-allowed': ''}`}>
             {isPending ?(
                 <React.Fragment>
-                    <loader2
+                    <Loader2 className="animate-spin h-4 w-4"/>
+                    Creating Account
                 </React.Fragment>
             ): (
                 'CREATE ACCOUNT'

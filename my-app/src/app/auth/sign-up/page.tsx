@@ -24,12 +24,12 @@ const SignUpPage = async () => {
               
             
         }
-        const {email,passwrod} = parsed.data;
-        const {userr,error } = await registerUser(email,password)
+        const { email, passwrod } = parsed.data;
+        const {user,error } = await registerUser(email,passwrod)
         if(error){
           return{message:error}
         }else if(user){
-          await loginUser(email,password)
+          await loginUser(email,passwrod)
           return  redirect("/")
         }
        

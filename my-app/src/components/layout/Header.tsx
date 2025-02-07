@@ -1,5 +1,8 @@
 "use client";
+import { logOutUser } from "@/actions/auth";
+import { User } from "@prisma/client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 const AnnouncementBar = () => {
   return (
@@ -12,8 +15,17 @@ const AnnouncementBar = () => {
     </div>
   );
 };
+let user;
+
+
+type HeaderProps = {
+user: Omit<User, "passwordHash"> | null
+}
+
+
 
 const Header = () => {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [prevScrollY, setPrevScroollY] = useState<number>(0);
 
@@ -58,9 +70,30 @@ const Header = () => {
             <div className="flex flex-1 justify-end items-center gap-2 sm:gap-4">
               <button className="text-gray-700 hover:text-gray-900 hidden sm:block">
                 {/* // logo// */}
+
               </button>
-              <Link href="/auth/sign-in">Sign In</Link>
-              <Link href="/auth/sign-up">Sign Up</Link>
+
+              {user ? (
+                  <div className="flex items-center gap-2 sm:gap-4">
+                    <span >{user.email}
+                      <Link href={"#"} onClick={async (e) => {
+                        e.preventDefault()
+                        await  logOutUser();
+                        router.refresh();
+                        
+                      
+                      }}>
+                        Sign Out
+                      </Link>
+                    </span>
+                  </div>
+              ):(
+                <React.Fragment>
+
+                  <Link href="/auth/sign-in">Sign In</Link>
+                  <Link href="/auth/sign-up">Sign Up</Link>
+                </React.Fragment>
+              )}
               <button className="text-gray-700 hover:text-gray-900 relative">
                 {/* logo */}
                 <span className="absolute -top-1 -right-1 bg-black text-white text-[10] sm:text-xs w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full  flex items-center justify-center">
@@ -76,3 +109,5 @@ const Header = () => {
 };
 
 export default Header;
+
+

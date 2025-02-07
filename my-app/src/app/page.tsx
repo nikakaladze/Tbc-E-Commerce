@@ -1,7 +1,13 @@
+import { getCurrentSession } from "@/actions/auth";
 import Image from "next/image";
+import { json } from "stream/consumers";
 
-export default function Home() {
+const Home = async () => {
+  const {user} = await getCurrentSession();
+
   return(
-    <div>Home</div>
+    <div>{JSON.stringify(user)}</div>
   )
 }
+
+export default Home;

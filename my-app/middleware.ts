@@ -1,3 +1,4 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 
 import type { NextRequest } from "next/server";
@@ -20,6 +21,7 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
         return response;
     }
 
+    /* CSRF Protection */
     const originHeader = request.headers.get("Origin");
     // NOTE: You may need to use `X-Forwarded-Host` instead
     const hostHeader = request.headers.get("Host");
